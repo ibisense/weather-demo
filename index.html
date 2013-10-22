@@ -1,0 +1,166 @@
+<!DOCTYPE html> <html lang='en'> 
+    <head> 
+        <meta charset='utf-8'> 
+        <meta name="viewport" content="width=device-width">
+        
+        <title>Ibisense weather data</title>
+        <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
+        <!-- JQuery must be included before js/ibisense-1.2.2.js --> 
+        <script src='js/jquery-1.9.1.min.js'></script>
+        <!-- script src='js/jquery-ui.js'></script -->
+        
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+            
+        <!-- Twitter bootstrap stuff -->
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap-tab.js"></script>
+        
+        <!-- Ibisense library -->
+        <script src='js/ibisense-1.2.6.js'></script>
+        <!-- plotting libraries -->
+        <script src="js/highstock.js"></script>
+        <script src="js/highcharts-more.js"></script>
+        <script src="js/data.js"></script>
+        <script src="js/exporting.js"></script>
+        
+        <script src='js/demo.js'></script>
+        <style>
+            
+            .footer {
+                color: #666;
+                padding: 17px 0 18px 0;
+            }
+            
+            .footer a {
+                color: #999;
+            }
+            
+            .mainmenu {
+                
+            }
+            
+            @media screen and (max-width: 600px) {
+                .mainmenu {
+                    .nav-stacked;
+                }
+            }
+            
+            @media screen and (max-width: 600px) {
+                .desktoplabels {
+                    display: none;
+                }
+            }
+            
+            @media screen and (min-width: 600px) {
+                .mobilelabels {
+                    display: none;
+                }
+            }
+            
+            .plot {
+                
+            }
+            
+            .banner {
+                height: 80px;
+                display: none;
+                
+            }
+            
+            #map-canvas {
+                height: 300px;
+            }
+            
+            @media screen and (max-height: 600px) {
+                
+                #map-canvas {
+                    height: 200px;
+                }
+                                
+                .plot {
+                    height: 400px;
+                }
+            }
+            
+        </style>
+    </head>
+    <body>
+        <script>
+            $(document).ready(function(){
+                init(); 
+                
+                $("input[type=text]").click(function() {
+                    $(this).select();
+                });
+                              
+                $("#main_menu").on("click", "a", function(e){
+                    $(this).tab('show');
+                    var tab_name = $(this).attr('name');
+                    if (tab_name === 'temperature') {
+                        plotTempHum();
+                    } else if (tab_name === 'wind') {
+                        plotWind();
+                    } else {
+                        var loc = new google.maps.LatLng(60.733474, 26.212767);
+                                   
+                        var mapOptions = {
+                            zoom: 10,
+                            center: loc,
+                            scrollwheel: false,
+                            navigationControl: false,
+                            scaleControl: false,
+                            streetViewControl: false,
+                            draggable: false, 
+                            mapTypeControl: false,
+                            mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.NONE},
+                            navigationControl: false,
+                            navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        };
+                                   
+                        map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+                                    
+                        new google.maps.Marker({
+                                position: loc,
+                                map: map
+                        });
+                    }
+                });
+                              
+                $('#main_menu a:first').trigger('click');
+            });
+        </script>
+        <div style="margin-left: 10px;">
+            <div>
+                <img src="images/logo2.png" alt="Ibisense" class="banner"/>
+            </div>
+            
+            <div class="content" style="width:100%;">
+                
+                <ul class="nav nav-tabs mobile" id="main_menu">
+                    <li><a data-toggle="tab" name="temperature" href="#temphumcontainer">Temperature and humidity</a></li>
+                    <li><a data-toggle="tab" name="wind" href="#windcontainer">Wind</a></li>
+                    <li><a data-toggle="tab" name="map" href="#map">Map</a></li>
+                </ul>
+                
+                <div class="tab-content">
+                    <div class="tab-pane" id="temphumcontainer">
+                    <div id="temp-canvas" class="plot" style="width: 95%; margin: 0 auto"></div>
+                    </div>
+                    <div class="tab-pane" id="windcontainer">
+                    <div id="wind-canvas" class="plot" style="width: 95%; margin: 0 auto"></div>
+                    </div>
+                    <div class="tab-pane" id="map">
+                        <div id="map-canvas" class="plot" style="width: 80%; margin: 0 auto"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="container_footer" style="height: 30px; margin-left: 20px;">
+                    <p>Powered by <a href="http://ibisense.com">Ibisense Oy</a> &copy; 2013</p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
